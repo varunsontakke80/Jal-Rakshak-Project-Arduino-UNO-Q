@@ -1,0 +1,7 @@
+name: Jal Rakshak Pipe Node
+description: "Underground water pipe monitoring node - Acoustic AI leak detection via USB microphone, multi-parameter water quality sensors, and LoRa uplink to Master Node"
+ports: []
+bricks:
+  - arduino:audio_classification: {}
+  - arduino:web_ui: {}
+icon: "💧"

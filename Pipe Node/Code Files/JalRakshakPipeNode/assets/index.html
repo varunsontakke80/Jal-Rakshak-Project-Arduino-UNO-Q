@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Jal Rakshak — Pipe Node Dashboard</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!-- Header -->
+  <header>
+    <div class="header-left">
+      <span class="logo">💧</span>
+      <div>
+        <h1>Jal Rakshak</h1>
+        <p class="subtitle">Pipe Node — Underground Water Monitor</p>
+      </div>
+    </div>
+    <div class="header-right">
+      <span id="status-badge" class="badge badge-normal">NORMAL</span>
+      <span id="lora-badge" class="badge badge-info">LoRa</span>
+    </div>
+  </header>
+
+  <!-- Emergency Banner -->
+  <div id="emergency-banner" class="emergency-banner hidden">
+    <span id="emergency-text">🚨 LEAK DETECTED! Emergency LoRa alert transmitted.</span>
+  </div>
+
+  <!-- Main Grid -->
+  <main class="grid">
+
+    <!-- Acoustic AI Card -->
+    <section class="card card-ai">
+      <h2>🔊 Acoustic Leak Detection</h2>
+      <div class="ai-result">
+        <div id="ai-label" class="ai-label safe">LISTENING…</div>
+        <div class="ai-bar-wrap">
+          <div class="ai-bar-label">Leak (Acoustic Cavitation)</div>
+          <div class="bar-track"><div id="bar-leak" class="bar-fill bar-danger" style="width:0%"></div></div>
+          <span id="pct-leak" class="bar-pct">0%</span>
+        </div>
+        <div class="ai-bar-wrap">
+          <div class="ai-bar-label">Noise (Normal Background)</div>
+          <div class="bar-track"><div id="bar-noise" class="bar-fill bar-safe" style="width:0%"></div></div>
+          <span id="pct-noise" class="bar-pct">0%</span>
+        </div>
+        <div class="ai-meta">
+          <span>Consecutive windows: <b id="consec-count">0</b> / 2</span>
+          <span id="ai-timestamp" class="ts"></span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Water Quality Card -->
+    <section class="card card-sensors">
+      <h2>🧪 Water Quality</h2>
+      <div class="sensor-grid">
+        <div class="sensor-item">
+          <div class="s-label">pH</div>
+          <div id="val-ph" class="s-value">7.24</div>
+          <div class="s-range">6.5 – 8.5</div>
+        </div>
+        <div class="sensor-item">
+          <div class="s-label">TDS</div>
+          <div id="val-tds" class="s-value">185 ppm</div>
+          <div class="s-range">&lt; 500 ppm</div>
+        </div>
+        <div class="sensor-item">
+          <div class="s-label">Turbidity</div>
+          <div id="val-turb" class="s-value">8.5 NTU</div>
+          <div class="s-range">&lt; 100 NTU</div>
+        </div>
+        <div class="sensor-item">
+          <div class="s-label">Temp</div>
+          <div id="val-temp" class="s-value">25.0°C</div>
+          <div class="s-range">°C</div>
+        </div>
+      </div>
+      <div class="sensor-flags">
+        <span id="flag-flow" class="flag flag-on-safe">⬤ Flow Active</span>
+        <span id="flag-leak" class="flag flag-off">⬤ Leak Clear</span>
+        <span id="flag-emg" class="flag flag-off">⬤ Normal</span>
+      </div>
+    </section>
+
+    <!-- LoRa & System Card -->
+    <section class="card card-lora">
+      <h2>📡 LoRa & System</h2>
+      <table class="info-table">
+        <tr><td>Node ID</td><td id="inf-nodeid">—</td></tr>
+        <tr><td>Location</td><td id="inf-gps">—</td></tr>
+        <tr><td>LoRa Status</td><td id="inf-lora">Waiting…</td></tr>
+        <tr><td>Edge AI</td><td id="inf-ai">Active</td></tr>
+        <tr><td>Last Update</td><td id="inf-ts">—</td></tr>
+      </table>
+      <div class="btn-row">
+        <button id="btn-force-lora" class="btn btn-primary">⚡ Force LoRa Tx</button>
+        <button id="btn-refresh" class="btn btn-secondary">↺ Refresh</button>
+      </div>
+    </section>
+
+  </main>
+
+  <footer>
+    <span>Jal Rakshak Pipe Node · Arduino UNO Q 2GB · Hackster.io "Invent the Future" 2026</span>
+    <span id="conn-status" class="conn-dot conn-off">●</span>
+  </footer>
+
+  <!-- App Lab Local Offline Scripts -->
+  <script src="libs/socket.io.min.js"></script>
+  <script src="libs/arduino.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

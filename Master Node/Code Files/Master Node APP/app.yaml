@@ -1,0 +1,7 @@
+name: Jal Rakshak Master Node
+description: "Decentralized Physical AI Water Quality & Leak Monitoring Master Node for Arduino UNO Q with LoRa network, MQ gas sensors, and Edge Impulse video classification"
+ports: []
+bricks:
+  - arduino:video_image_classification: {}
+  - arduino:web_ui: {}
+icon: "💧"

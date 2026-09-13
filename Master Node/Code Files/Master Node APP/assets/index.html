@@ -1,0 +1,262 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
+    <meta name="theme-color" content="#0a1628" />
+    <title>Jal Rakshak Master Node — Decentralized Water Quality Monitoring System</title>
+    <!-- Leaflet CSS for Indore Map -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <link rel="stylesheet" type="text/css" href="style.css" />
+  </head>
+  <body>
+    <!-- Dynamic Emergency Alert Banner -->
+    <div id="emergency-banner" class="emergency-banner hidden">
+      <span class="emergency-icon">🚨</span>
+      <span id="emergency-text">EMERGENCY ALERT: Pipeline Contamination or Leak Detected!</span>
+    </div>
+
+    <div class="app-wrapper">
+      <!-- Main Top Navbar -->
+      <header class="main-header">
+        <div class="header-left">
+          <span class="brand-icon">💧</span>
+          <div>
+            <h1 class="brand-title">Jal Rakshak Master Node</h1>
+            <p class="brand-sub">Decentralized Water Security & Pipeline Monitor • Master Node</p>
+          </div>
+        </div>
+        <div class="header-right">
+          <span id="pill-wifi" class="status-pill safe">WiFi: Online</span>
+          <span id="pill-firebase" class="status-pill neutral">Cloud: Syncing</span>
+          <span id="pill-lora" class="status-pill neutral">LoRa: Ready</span>
+        </div>
+      </header>
+
+      <!-- Main Dashboard Grid -->
+      <div class="dashboard-layout">
+        
+        <!-- ── Left Column: Node Selector ── -->
+        <aside class="sidebar-nodes">
+          <div class="sidebar-title">Pipe Nodes</div>
+          <div class="node-buttons-list" id="node-selector-list">
+            <button class="node-btn active" onclick="selectNode(1)" id="node-btn-1">
+              <div class="node-btn-header">
+                <span class="node-name">Pipe Node 1</span>
+                <span class="node-dot safe" id="node-dot-1"></span>
+              </div>
+              <div class="node-sub" id="node-sub-1">Central Indore • Normal</div>
+            </button>
+
+            <button class="node-btn" onclick="selectNode(2)" id="node-btn-2">
+              <div class="node-btn-header">
+                <span class="node-name">Pipe Node 2</span>
+                <span class="node-dot safe" id="node-dot-2"></span>
+              </div>
+              <div class="node-sub" id="node-sub-2">Vijay Nagar • Normal</div>
+            </button>
+
+            <button class="node-btn" onclick="selectNode(3)" id="node-btn-3">
+              <div class="node-btn-header">
+                <span class="node-name">Pipe Node 3</span>
+                <span class="node-dot safe" id="node-dot-3"></span>
+              </div>
+              <div class="node-sub" id="node-sub-3">Bhawarkua • Normal</div>
+            </button>
+
+            <button class="node-btn" onclick="selectNode(4)" id="node-btn-4">
+              <div class="node-btn-header">
+                <span class="node-name">Pipe Node 4</span>
+                <span class="node-dot safe" id="node-dot-4"></span>
+              </div>
+              <div class="node-sub" id="node-sub-4">Palasia • Normal</div>
+            </button>
+          </div>
+
+          <!-- Quick Navigation to Diagnostics -->
+          <div class="sidebar-action-box">
+            <a href="#diagnostics-section" class="btn-jump-diag">🧪 Water Cup Testing &rarr;</a>
+          </div>
+        </aside>
+
+        <!-- ── Main Middle/Right Content ── -->
+        <main class="main-content">
+          
+          <!-- Section 1: Live Telemetry Graph -->
+          <section class="telemetry-section card">
+            <div class="telemetry-header">
+              <h2 id="telemetry-node-title">Live Telemetry - Pipe Node 1</h2>
+              <span class="badge b-neutral" id="telemetry-timestamp">Time: --:--:--</span>
+            </div>
+
+            <!-- Custom Chart Container (ph, tds, turbidity, temperature) -->
+            <div class="chart-wrapper">
+              <div class="chart-container">
+                <div class="chart-canvas-area" id="telemetry-chart">
+                  <!-- Chart bars rendered via JS / CSS -->
+                </div>
+                <div class="chart-x-axis">
+                  <span id="chart-x-time">14:05:15</span>
+                  <span class="axis-label">Time</span>
+                </div>
+              </div>
+
+              <!-- Legend -->
+              <div class="chart-legend">
+                <div class="legend-title">variable</div>
+                <div class="legend-item"><span class="legend-color ph-color"></span> ph</div>
+                <div class="legend-item"><span class="legend-color tds-color"></span> tds</div>
+                <div class="legend-item"><span class="legend-color turb-color"></span> turbidity</div>
+                <div class="legend-item"><span class="legend-color temp-color"></span> temperature</div>
+              </div>
+            </div>
+
+            <!-- Node Quick Stat Cards -->
+            <div class="node-stat-cards">
+              <div class="stat-box">
+                <div class="stat-label">pH Level</div>
+                <div class="stat-val" id="stat-ph">7.20</div>
+                <div class="stat-range">Safe: 6.5 - 8.5</div>
+              </div>
+              <div class="stat-box">
+                <div class="stat-label">TDS</div>
+                <div class="stat-val" id="stat-tds">240 <small>ppm</small></div>
+                <div class="stat-range">Safe: &lt; 500 ppm</div>
+              </div>
+              <div class="stat-box">
+                <div class="stat-label">Turbidity</div>
+                <div class="stat-val" id="stat-turb">12.0 <small>NTU</small></div>
+                <div class="stat-range">Safe: &lt; 50 NTU</div>
+              </div>
+              <div class="stat-box">
+                <div class="stat-label">Temperature</div>
+                <div class="stat-val" id="stat-temp">24.5 <small>°C</small></div>
+                <div class="stat-range">Normal: 20 - 30 °C</div>
+              </div>
+              <div class="stat-box">
+                <div class="stat-label">Water Presence</div>
+                <div class="stat-badge" id="stat-water"><span class="badge b-safe">YES</span></div>
+                <div class="stat-range">Flow Active</div>
+              </div>
+              <div class="stat-box">
+                <div class="stat-label">Acoustic Leak</div>
+                <div class="stat-badge" id="stat-leak"><span class="badge b-safe">CLEAR</span></div>
+                <div class="stat-range">Acoustic AI</div>
+              </div>
+            </div>
+          </section>
+
+          <!-- Section 2: Live Node Map (Indore) -->
+          <section class="map-section card">
+            <div class="section-title-row">
+              <h2>📍 Live Pipe Nodes Map</h2>
+              <span class="map-location-tag">Indore, Madhya Pradesh</span>
+            </div>
+            <div id="indore-map" class="map-container"></div>
+          </section>
+
+          <!-- Section 3: Diagnostic Testing (Camera + Gas Testing with Start/Stop Buttons) -->
+          <section class="diagnostic-section card" id="diagnostics-section">
+            <div class="section-title-row">
+              <h2>🔬 Testing Cup Forensic Diagnostics</h2>
+            </div>
+
+            <div class="diag-split-grid">
+              
+              <!-- Left: Camera Stream & Edge Impulse AI Controls -->
+              <div class="diag-box">
+                <div class="box-header">
+                  <h3>📷 Camera Live Video Feed</h3>
+                  <div class="btn-group">
+                    <button class="btn-ctrl btn-start" id="btn-cam-start" onclick="startCameraTest()">▶ Start Camera</button>
+                    <button class="btn-ctrl btn-stop" id="btn-cam-stop" onclick="stopCameraTest()">⏹ Stop Camera</button>
+                  </div>
+                </div>
+
+                <div class="video-feed-wrap">
+                  <div id="videoPlaceholder" class="camera-placeholder">
+                    <div class="spinner"></div>
+                    <p id="cam-status-text">Connecting to Edge Impulse camera stream...</p>
+                  </div>
+                  <iframe id="dynamicIframe" title="Video Stream" frameborder="0" style="display:none;"></iframe>
+                </div>
+
+                <!-- Live Vision AI Bar -->
+                <div class="vision-status-card">
+                  <div class="vision-header">
+                    <span>Edge Impulse AI Inference:</span>
+                    <strong id="vision-label-display" class="c-safe">WAITING</strong>
+                  </div>
+                  <div class="meter-bar-wrap">
+                    <div class="meter-bar-fill" id="vision-confidence-bar" style="width: 0%"></div>
+                  </div>
+                  <div class="meter-labels">
+                    <span id="vision-bad-pct">Bad Water: 0%</span>
+                    <span id="vision-good-pct">Good Water: 0%</span>
+                  </div>
+                </div>
+
+                <div class="slider-control-box">
+                  <label>Confidence Threshold: <span id="conf-val">0.50</span></label>
+                  <input type="range" id="confidenceSlider" min="0" max="1" step="0.05" value="0.5" />
+                </div>
+              </div>
+
+              <!-- Right: Gas Sensor Testing & Contamination Verdict -->
+              <div class="diag-box">
+                <div class="box-header">
+                  <h3>🧪 Biochemical Gas Sensor Test</h3>
+                  <div class="btn-group">
+                    <button class="btn-ctrl btn-start" id="btn-gas-start" onclick="startGasTest()">▶ Start Gas Test</button>
+                    <button class="btn-ctrl btn-stop" id="btn-gas-stop" onclick="stopGasTest()">⏹ Stop Gas Test</button>
+                  </div>
+                </div>
+
+                <!-- Gas Meters -->
+                <div class="gas-meters-row">
+                  <div class="gas-box">
+                    <div class="gas-title">Ammonia (NH₃)</div>
+                    <div class="gas-val" id="gas-nh3">0.00 <small>ppm</small></div>
+                    <div class="gas-limit">Safe &lt; 2.0 ppm | Hazard &ge; 10.0 ppm</div>
+                  </div>
+                  <div class="gas-box">
+                    <div class="gas-title">Hydrogen Sulfide (H₂S)</div>
+                    <div class="gas-val" id="gas-h2s">0.00 <small>ppm</small></div>
+                    <div class="gas-limit">Safe &lt; 0.5 ppm | Hazard &ge; 2.0 ppm</div>
+                  </div>
+                </div>
+
+                <!-- 🌟 Final Contamination Verdict Card 🌟 -->
+                <div class="verdict-card safe" id="verdict-card">
+                  <div class="verdict-header-row">
+                    <span class="verdict-label">Water Quality Forensic Result</span>
+                    <span class="badge b-safe" id="verdict-badge">WATER SAFE &amp; CLEAR</span>
+                  </div>
+                  <h2 class="verdict-title" id="verdict-title">WATER SAFE &amp; CLEAR</h2>
+                  <p class="verdict-desc" id="verdict-details">
+                    Normal biochemical baseline. Camera sample visually clear and no toxic sewage gases detected.
+                  </p>
+                </div>
+              </div>
+
+            </div>
+          </section>
+
+        </main>
+      </div>
+
+      <!-- App Footer -->
+      <footer class="app-footer">
+        <span>Jal Rakshak Master Node • Arduino UNO Q</span>
+        <span id="footer-packet-info">LoRa Telemetry Active</span>
+      </footer>
+    </div>
+
+    <!-- Leaflet JS for Map -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <!-- App Lab Scripts -->
+    <script src="libs/socket.io.min.js"></script>
+    <script src="libs/arduino.js"></script>
+    <script src="app.js"></script>
+  </body>
+</html>

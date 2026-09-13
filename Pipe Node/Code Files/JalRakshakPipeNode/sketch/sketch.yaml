@@ -1,0 +1,9 @@
+profiles:
+  default:
+    platforms:
+      - platform: arduino:zephyr
+    libraries:
+      - LoRa (0.8.0)
+      - OneWire (2.3.8)
+      - DallasTemperature (3.9.0)
+default_profile: default

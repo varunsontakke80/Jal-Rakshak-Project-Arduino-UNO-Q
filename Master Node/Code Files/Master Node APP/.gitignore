@@ -1,0 +1,13 @@
+# Jal Rakshak — master-node local secrets
+python/config.py
+.env
+*.eim
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+
+# IDE
+.vscode/
+*.swp
